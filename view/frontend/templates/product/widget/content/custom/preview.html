@@ -1,0 +1,23 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<!--
+  By default, this template is not in use. If you need to override and use it, 
+  you must also change the appearance preview_template reference in the config file 
+  to point to THIS appearance template instead of the native Magento_PageBuilder template.
+-->
+
+<div class="pagebuilder-content-type pagebuilder-products" data-bind="event: { mouseover: onMouseOver, mouseout: onMouseOut }, mouseoverBubble: false">
+    <div attr="data.main.attributes" ko-style="data.main.style" css="data.main.css">
+        <div if="displayPreview" class="rendered-content" html="widgetUnsanitizedHtml" afterRender="onAfterRender"></div>
+        <div ifnot="displayPreview" class="pagebuilder-products-placeholder">
+            <span class="placeholder-text"  text="placeholderText"/>
+        </div>
+    </div>
+    <render args="getOptions().template" />
+</div>
+

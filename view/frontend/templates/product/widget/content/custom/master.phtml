@@ -1,0 +1,188 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())) : ?>
+    <?php
+    $type = 'widget-simple-product-list';
+
+    $mode = 'grid';
+
+    //$image = 'mm_new_products_content_widget_simple';
+    $image = "category_page_grid";
+    $items = $block->getProductCollection()->getItems();
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = false;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+
+
+    $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+    $arraySecondoSwiper = [];
+
+    ?>
+
+    <?php
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+
+    //Recupero url store view
+    $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+    $baseUrlRoot = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+
+    ?>
+
+    <section class="two_cols_image prof__single_slide_product full-height-vh reverse">
+        <div class="row row-full">
+
+
+
+            <!-- INSERIMENTO PRIMO SWIPER -->
+            <div class="medium-6 small-12 columns no-padding full-height col-1 show-for-medium">
+
+
+                <div class="swiper-container swiper__prof__two_cols_right">
+                    <div class="swiper-wrapper">
+
+
+
+                        <?php foreach ($items as $_item) : ?>
+                            <?php // echo $_item->getName(); 
+                            ?>
+                            <?php $productEntityForMediaGallery = $objectManager->create('Magento\Catalog\Model\Product')->load($_item->getId());
+
+
+                            $images = $productEntityForMediaGallery->getMediaGalleryImages();
+                            $linkItem = $block->escapeUrl($block->getProductUrl($_item));
+
+                            //Estraggo le immagini da inserire nel prossimo swiper slide
+                            $tempArray = [];
+                            foreach ($images as $child) {
+                                $rowImage = "<img src='" .  $child->getUrl() . "' >";
+                                // $rowImage=""; 
+                                $linkImmagine = "<a href='" . $linkItem . "' class='text-3 link-arrow-right product-name'>" . $_item->getName() . "</a>";
+                                $rowItemSecondoSwiper = $rowImage . $linkImmagine;
+                                array_push($tempArray, $rowItemSecondoSwiper);
+                            }
+
+
+
+                            ?>
+                            <?php array_push($arraySecondoSwiper, $tempArray); ?>
+
+                            <?php
+                            $baseUrl = $this->getUrl('/media');
+                            $urlMainImage = $_item->getData('image');
+                            $completeUrlImage = $baseUrl . "media/catalog/product" . $urlMainImage;
+                            ?>
+                            <!-- <div class="swiper-slide" style="background-image: url('<?= $completeUrlImage; ?>');"></div>-->
+
+                        <?php endforeach;
+
+                        //QUI CI DEVO METTERE IL SECONDO CICLO
+                        foreach ($arraySecondoSwiper as $prodottoMedia) : 
+
+                    if (array_key_exists(1, $prodottoMedia)) {?>
+                            <!-- SECONDO CICLO -->
+                            <div class="swiper-slide">
+                                <div class="ct-slide">
+
+                                    <?php echo  $prodottoMedia[1]; ?>
+
+                                </div>
+
+                            </div>
+                        <?php } endforeach; ?>
+
+
+
+                    </div>
+
+                </div>
+
+            </div><!-- chiusura div medium-6 small-12 columns no-padding full-height col-1 show-for-medium -->
+
+
+            <!-- SECONDO MACRO DIV -->
+            <div class="medium-6 small-12 columns no-padding full-height col-2">
+                <div class="ct-img">
+                    <div class="ct-text">
+                        <p class="text-3 title-section">Prodotti presenti nel progetto</p>
+                        <div class="ct-arrow">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="swiper-container swiper__prof__two_cols_left">
+                        <div class="swiper-wrapper">
+                            <?php
+                            //QUI CI METTO IL PRIMO CICLO
+                            foreach ($images as $child) {
+                                $rowImage = "<img src='" .  $child->getUrl() . "' >";
+                                // $rowImage=""; 
+                                $linkImmagine = "<a href='" . $linkItem . "' class='text-3 link-arrow-right product-name'>" . $_item->getName() . "</a>";
+                                $rowItemSecondoSwiper = $rowImage . $linkImmagine;
+                                array_push($tempArray, $rowItemSecondoSwiper);
+                            }
+
+
+
+                            ?>
+                            <?php array_push($arraySecondoSwiper, $tempArray); ?>
+
+                            <?php
+                            //$baseUrl = $this->getUrl('/media');
+                            $urlMainImage = $_item->getData('image');
+                            $completeUrlImage = $baseUrlRoot . "media/catalog/product" . $urlMainImage;
+                            ?>
+                            <div class="swiper-slide" style="background-image: url('<?= $completeUrlImage; ?>');">
+                                <!-- Link and name -->
+
+                                <a href='<?php echo $linkItem ?>' class='text-3 link-arrow-right product-name'><?= $_item->getName() ?></a>;
+
+                            </div>
+
+
+
+                            <?php
+                            foreach ($arraySecondoSwiper as $prodottoMedia) : ?>
+                                <!--<div class="swiper-slide">
+                                    <div class="ct-slide">
+
+                                        <?php // echo  $prodottoMedia[0]; 
+                                        ?>
+
+                                    </div>
+
+                                </div>-->
+                            <?php endforeach; ?>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+<?php endif; ?>

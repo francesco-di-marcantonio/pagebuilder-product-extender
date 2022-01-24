@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">3
+    <virtualType name="AppearanceSourceProducts" type="Magento\PageBuilder\Model\Source\VisualSelect">
+        <arguments>
+            <argument name="optionsSize" xsi:type="string">large</argument>
+            <argument name="optionsData" xsi:type="array">
+                <item name="custom" xsi:type="array">
+                    <item name="value" xsi:type="string">custom</item>
+                    <item name="title" xsi:type="string" translate="true">Custom Appereance</item>
+                    <item name="icon" xsi:type="string">Magento_PageBuilder::css/images/content-type/products/appearance/carousel.svg</item>
+                </item>
+            
+            </argument>
+        </arguments>
+    </virtualType>
+</config>
